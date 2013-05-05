@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/HakoCore">
+        <file alias="folder">img/folder.png</file>
+        <file alias="unknown">img/unknown.png</file>
+        <file alias="close">img/close.png</file>
+        <file alias="link">img/link.png</file>
+        <file alias="menu">img/menu.png</file>
+        <file alias="settings">img/settings.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/Sample">
+        <file alias="logo">img/tip.png</file>
+    </qresource>
+</RCC>

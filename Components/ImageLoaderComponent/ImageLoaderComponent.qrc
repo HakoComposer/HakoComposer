@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/ImageLoader">
+        <file alias="logo">img/folder_picture.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,3 @@
+[submodule "Components/SerialComponent/qextserialport"]
+	path = Components/SerialComponent/qextserialport
+	url = https://code.google.com/p/qextserialport/

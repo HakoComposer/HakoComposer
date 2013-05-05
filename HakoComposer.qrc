@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="save">img/save.png</file>
+        <file alias="open">img/open.png</file>
+        <file alias="new">img/new.png</file>
+        <file alias="hako">img/hako.png</file>
+    </qresource>
+</RCC>
