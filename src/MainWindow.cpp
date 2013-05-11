@@ -17,6 +17,7 @@
 #include "SerialComponent.hpp"
 #include "ImageLoaderComponent.h"
 #include "ImageViewerComponent.h"
+#include "ImageFilterComponent.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -105,6 +106,7 @@ QList<Component *> MainWindow::loadComponents()
     result.push_back(new SerialComponent());
     result.push_back(new ImageLoaderComponent());
     result.push_back(new ImageViewerComponent());
+    result.push_back(new ImageFilterComponent());
     return result;
 }
 

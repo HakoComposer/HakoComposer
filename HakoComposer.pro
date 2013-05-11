@@ -35,6 +35,10 @@ DEFINES += APP_VERSION=\\\"$$APP_VERSION\\\"
         error("Unable to include Serial Component.")
 }
 
+!include(Components/ImageFilterComponent/ImageFilterComponent.pri) {
+        error("Unable to include Image Filter Component.")
+}
+
 
 HEADERS  += \
     include/MainWindow.hpp \
