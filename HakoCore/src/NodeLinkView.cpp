@@ -9,17 +9,22 @@
 #include <QPainter>
 #include <QGraphicsScene>
 #include <QCursor>
+#include <QPropertyAnimation>
 #include <QDebug>
 
 namespace Hako {
 
 NodeLinkView::NodeLinkView(PortTypeEnum type, NodePortView* p1, NodePortView* p2, QGraphicsItem *parent):
     QGraphicsObject(parent),
-    m_color(QColor(Qt::blue))
+    m_color(QColor(Qt::blue)),
+    m_signalMapper(new QSignalMapper(this))
 {
     setFlag(QGraphicsItem::ItemIsSelectable);
     setCursor(QCursor(Qt::ArrowCursor));
     setAcceptHoverEvents(true);
+
+    QObject::connect(m_signalMapper, SIGNAL(mapped(int)),
+                 this, SLOT(signalActivated(int)));
 
     if(!p1){qWarning() << "NodeLinkView::constructor warning p1 = nil ptr";}
     if(!p2){qWarning() << "NodeLinkView::constructor warning p2 = nil ptr";}
@@ -64,6 +69,8 @@ void NodeLinkView::connectSignals()
             if(!outPort()->isTemporary && !inPort()->isTemporary){
                 QObject::connect(outPort()->object(), outPort()->signal(),
                                  inPort()->object(), inPort()->signal());
+                QObject::connect(outPort()->object(), outPort()->signal(), m_signalMapper, SLOT(map()));
+                m_signalMapper->setMapping(outPort()->object(), 0);
             }
         }
     }
@@ -76,9 +83,21 @@ void NodeLinkView::disconnectSignals()
             if(!outPort()->isTemporary && !inPort()->isTemporary){
                 QObject::disconnect(outPort()->object(), outPort()->signal(),
                                     inPort()->object(), inPort()->signal());
+                QObject::disconnect(outPort()->object(), outPort()->signal(), m_signalMapper, SLOT(map()));
+                m_signalMapper->removeMappings(outPort()->object());
             }
         }
     }
+}
+
+void NodeLinkView::signalActivated(int index)
+{
+    Q_UNUSED(index);
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "color");
+    animation->setDuration(250);
+    animation->setStartValue(QColor(Qt::green));
+    animation->setEndValue(m_color);
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void NodeLinkView::setPorts( NodePortView* in, NodePortView* out)

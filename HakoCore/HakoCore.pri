@@ -7,6 +7,8 @@
     included_modules += $$PWD
     message( "Including $$PWD" )
 
+QT       += core gui
+
 INCLUDEPATH += $$PWD/include
 
 HEADERS  += \

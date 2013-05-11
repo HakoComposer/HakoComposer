@@ -19,8 +19,7 @@ ImageFilterSettingsDialog::ImageFilterSettingsDialog(QWidget *parent) :
     setWindowFlags(Qt::WindowStaysOnTopHint);
 
     IplImage *image = cvLoadImage("/Users/anjin/Downloads/1367433920_kthememgr.png");
-    cv::Mat im(image);
-    cv::imshow("TEST",im);
+    cvShowImage("TEST",image);
 }
 
 ImageFilterSettingsDialog::~ImageFilterSettingsDialog()

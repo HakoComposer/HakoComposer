@@ -9,6 +9,7 @@
 #define NODELINKVIEW_HPP
 
 #include <QGraphicsObject>
+#include <QSignalMapper>
 #include "NodePortView.hpp"
 
 namespace Hako {
@@ -16,6 +17,7 @@ namespace Hako {
 class NodeLinkView : public QGraphicsObject
 {
     Q_OBJECT
+    Q_PROPERTY(QColor color READ color WRITE setColor)
 public:
     NodeLinkView( PortTypeEnum type, NodePortView* out, NodePortView* in, QGraphicsItem *parent = 0 );
     virtual ~NodeLinkView();
@@ -44,9 +46,13 @@ private:
     NodePortView* m_outPort;
     NodePortView* m_inPort;
     QColor m_color;
+    QSignalMapper *m_signalMapper;
 
     void connectSignals();
     void disconnectSignals();
+
+private slots:
+    void signalActivated(int index);
 };
 
 }
