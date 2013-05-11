@@ -53,7 +53,7 @@ QString ImageLoaderComponent::componentDescription() const
 
 QString ImageLoaderComponent::componentCategory() const
 {
-    return "/Image/loader";
+    return "/Image";
 }
 
 QString ImageLoaderComponent::componentAuthor() const

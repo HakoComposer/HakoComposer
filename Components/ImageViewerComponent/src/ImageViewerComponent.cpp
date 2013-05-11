@@ -53,7 +53,7 @@ QString ImageViewerComponent::componentDescription() const
 
 QString ImageViewerComponent::componentCategory() const
 {
-    return "/Image/Viewer";
+    return "/Image";
 }
 
 QString ImageViewerComponent::componentAuthor() const

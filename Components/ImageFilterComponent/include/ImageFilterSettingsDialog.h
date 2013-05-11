@@ -31,8 +31,18 @@ public:
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent *event);
 
+signals:
+    void imageReady(const QImage &image);
+
 private:
     Ui::ImageFilterSettingsDialog *ui;
+    QImage *m_image;
+
+    QImage iplImageToQImage(const IplImage *iplImage);
+    IplImage *qImageToIplImage(const QImage &qImage);
+
+private slots:
+    void imageGot(const QImage &image);
 };
 
 }

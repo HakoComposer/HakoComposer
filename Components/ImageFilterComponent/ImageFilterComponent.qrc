@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/Sample">
-        <file alias="logo">img/tip.png</file>
+    <qresource prefix="/ImageFilter">
+        <file alias="logo">img/color.png</file>
     </qresource>
 </RCC>

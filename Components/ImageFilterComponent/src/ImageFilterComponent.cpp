@@ -66,7 +66,7 @@ QString ImageFilterComponent::componentName() const
 
 QIcon ImageFilterComponent::componentIcon() const
 {
-    return QIcon(":/Sample/logo");
+    return QIcon(":/ImageFilter/logo");
 }
 
 QString ImageFilterComponent::componentId() const
@@ -83,7 +83,7 @@ QString ImageFilterComponent::componentDescription() const
 // It must always start with '/'
 QString ImageFilterComponent::componentCategory() const
 {
-    return "/Other";
+    return "/Image";
 }
 
 QString ImageFilterComponent::componentAuthor() const
