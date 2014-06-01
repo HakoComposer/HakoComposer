@@ -7,11 +7,12 @@
     included_modules += $$PWD
     message( "Including $$PWD" )
 
-QT       += core gui
+QT       += core gui widgets
 
 INCLUDEPATH += $$PWD/include
 
 HEADERS  += \
+    $$PWD/include/ComponentInterface.h \
     $$PWD/include/NodeView.hpp \
     $$PWD/include/NodePortView.hpp \
     $$PWD/include/NodeLinkView.hpp \

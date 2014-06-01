@@ -4,12 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       += widgets
+TEMPLATE    = lib
+CONFIG      += plugin
+QT          += core gui
+DESTDIR     = $$PWD/../../bin/plugins
 
 TARGET = ImageLoaderComponent
-TEMPLATE = lib
-
-DESTDIR = $$PWD/../../plugins/$$TARGET
 
 !include(../../HakoCore/HakoCore.pri) {
         error("Unable to include Hako Library.")

@@ -64,11 +64,13 @@ QString SampleComponent::componentName() const
     return "Sample";
 }
 
+//Here where the component icon is set
 QIcon SampleComponent::componentIcon() const
 {
     return QIcon(":/Sample/logo");
 }
 
+//The component id is important to differentiate components
 QString SampleComponent::componentId() const
 {
     return "com.kristou.components.Sample";
@@ -86,21 +88,25 @@ QString SampleComponent::componentCategory() const
     return "/Other";
 }
 
+//Somw information about the component creator
 QString SampleComponent::componentAuthor() const
 {
     return "Mehrez Kristou";
 }
 
+// The version of course
 QString SampleComponent::componentVersion() const
 {
     return "1.0.0";
 }
 
+// How to contact the auther
 QString SampleComponent::componentAuthorContact() const
 {
     return "mehrez@kristou.com";
 }
 
+// The component's background color
 QColor SampleComponent::componentColor() const
 {
     return QColor(Qt::yellow);

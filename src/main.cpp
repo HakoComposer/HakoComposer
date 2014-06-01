@@ -4,7 +4,7 @@
 *  [root]/license.txt for more. This information must remain intact.
 */
 
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "MainWindow.hpp"
 
 int main(int argc, char *argv[])

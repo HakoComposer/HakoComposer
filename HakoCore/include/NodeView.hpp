@@ -11,6 +11,7 @@
 #include <QGraphicsObject>
 #include <QRectF>
 #include <QGraphicsDropShadowEffect>
+#include <QGraphicsPixmapItem>
 #include <QList>
 #include "NodePortView.hpp"
 

@@ -4,7 +4,7 @@
 #  [root]/license.txt for more. This information must remain intact.
 #
 
-QT       += core gui
+QT       += core gui widgets
 
 TARGET = HakoComposer
 TEMPLATE = app
@@ -18,27 +18,6 @@ DEFINES += APP_VERSION=\\\"$$APP_VERSION\\\"
 !include(HakoCore/HakoCore.pri) {
         error("Unable to include Hako Library.")
 }
-
-!include(Components/SampleComponent/SampleComponent.pri) {
-        error("Unable to include Sample Component.")
-}
-
-!include(Components/SerialComponent/SerialComponent.pri) {
-        error("Unable to include Serial Component.")
-}
-
-!include(Components/ImageLoaderComponent/ImageLoaderComponent.pri) {
-        error("Unable to include Serial Component.")
-}
-
-!include(Components/ImageViewerComponent/ImageViewerComponent.pri) {
-        error("Unable to include Serial Component.")
-}
-
-!include(Components/ImageFilterComponent/ImageFilterComponent.pri) {
-        error("Unable to include Image Filter Component.")
-}
-
 
 HEADERS  += \
     include/MainWindow.hpp \

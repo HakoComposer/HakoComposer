@@ -4,13 +4,12 @@
 #  [root]/license.txt for more. This information must remain intact.
 #
 
-QT       += core gui
+TEMPLATE    = lib
+CONFIG      += plugin
+QT          += core gui
+DESTDIR     = $$PWD/../../bin/plugins
 
-TARGET = SampleComponent
-TEMPLATE = lib
-#CONFIG += staticlib
-
-DESTDIR = $$PWD/../../plugins/$$TARGET
+TARGET = ImageFilterComponent
 
 !include(../../HakoCore/HakoCore.pri) {
         error("Unable to include Hako Library.")
@@ -19,15 +18,15 @@ DESTDIR = $$PWD/../../plugins/$$TARGET
 INCLUDEPATH += include
 
 SOURCES += \
-    src/SampleComponent.cpp \
-    src/SampleSettingsDialog.cpp
+    src/ImageFilterComponent.cpp \
+    src/ImageFilterSettingsDialog.cpp
 
 HEADERS  += \
-    include/SampleComponent.hpp \
-    include/SampleSettingsDialog.h
+    include/ImageFilterComponent.hpp \
+    include/ImageFilterSettingsDialog.h
 
 FORMS += \
-    ui/SampleSettingsDialog.ui
+    ui/ImageFilterSettingsDialog.ui
 
 RESOURCES += \
-    SampleComponent.qrc
+    ImageFilterComponent.qrc

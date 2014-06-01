@@ -8,6 +8,7 @@
 #define SAMPLECOMPNENT_H
 
 #include <QTimer>
+
 #include "Component.hpp"
 #include "SampleSettingsDialog.h"
 
@@ -16,6 +17,7 @@ namespace Hako {
 class SampleComponent: public Component
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.kristou.HakoComposer.SampleComponent" FILE "SampleComponent.json")
 
 public:
     SampleComponent(QGraphicsItem *parent = 0);

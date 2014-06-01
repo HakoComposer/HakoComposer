@@ -15,6 +15,7 @@ namespace Hako {
 class ImageLoaderComponent: public Component
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.kristou.HakoComposer.ImageLoaderComponent" FILE "ImageLoaderComponent.json")
 public:
     ImageLoaderComponent(QGraphicsItem *parent = 0);
     // This function is obligatory to load the component properly

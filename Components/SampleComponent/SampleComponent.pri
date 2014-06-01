@@ -8,7 +8,7 @@
     included_modules += $$PWD
     message( "Including $$PWD" )
 
-QT       += core gui
+QT          += core gui
 
 !include(../../HakoCore/HakoCore.pri) {
         error("Unable to include Hako Library.")

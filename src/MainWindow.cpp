@@ -8,16 +8,21 @@
 #include "ui_MainWindow.h"
 #include "NodeView.hpp"
 #include "NodePortView.hpp"
+
+#include <QPluginLoader>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDirIterator>
 #include <QDebug>
+#include <iostream>
 
-#include "SampleComponent.hpp"
-#include "SerialComponent.hpp"
-#include "ImageLoaderComponent.h"
-#include "ImageViewerComponent.h"
-#include "ImageFilterComponent.hpp"
+#include "ComponentInterface.h"
+
+//#include "SampleComponent.hpp"
+//#include "SerialComponent.hpp"
+//#include "ImageLoaderComponent.h"
+//#include "ImageViewerComponent.h"
+//#include "ImageFilterComponent.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -26,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     setWindowTitle(QApplication::applicationName() + QString(" V") + QString(QApplication::applicationVersion()) +
-                       QString(" By ") + QString(QApplication::organizationName()));
+                   QString(" By ") + QString(QApplication::organizationName()));
 
     ui->graphicsView->setScene( &m_workspace );
 
@@ -93,20 +98,48 @@ void MainWindow::aboutPluginTriggered()
 
 void MainWindow::registerComponents(const QList<Component *> &components)
 {
-    foreach(Component *c, components){
-        ui->treeWidget->addComponent(c);
-        m_workspace.registerComponent(c);
+    foreach(Component *component, components){
+        if(component){
+            component->setParent(this);
+            ui->treeWidget->addComponent(component);
+            m_workspace.registerComponent(component);
+        }
     }
 }
 
 QList<Component *> MainWindow::loadComponents()
 {
     QList<Component *> result;
-    result.push_back(new SampleComponent());
-    result.push_back(new SerialComponent());
-    result.push_back(new ImageLoaderComponent());
-    result.push_back(new ImageViewerComponent());
-    result.push_back(new ImageFilterComponent());
+    //    result.push_back(new SampleComponent());
+    //    result.push_back(new SerialComponent());
+    //    result.push_back(new ImageLoaderComponent());
+    //    result.push_back(new ImageViewerComponent());
+    //    result.push_back(new ImageFilterComponent());
+
+    QDir pluginsDir(qApp->applicationDirPath());
+#ifdef Q_OS_MAC
+    pluginsDir.cd("../../../plugins");
+#else
+    pluginsDir.cd("plugins");
+#endif
+
+    std::cout << "Try to load plugins in folder " << pluginsDir.path().toStdString() << endl;
+
+    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+        std::cout << "Testing " << pluginsDir.absoluteFilePath(fileName).toStdString() << endl;
+        QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
+        QObject *plugin = loader.instance();
+        if (plugin) {
+            ComponentInterface *interface =  qobject_cast<ComponentInterface *>(plugin);
+            if(interface){
+                result.push_back(interface->getComponent());
+            }
+        }
+        else {
+            std::cout << loader.errorString().toStdString() << endl;
+            std::cout << plugin << endl;
+        }
+    }
     return result;
 }
 

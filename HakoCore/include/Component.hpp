@@ -7,22 +7,28 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-#include "NodeView.hpp"
 #include <QTimer>
 #include <QMenu>
+
+#include "ComponentInterface.h"
+#include "NodeView.hpp"
 
 namespace Hako {
 
 #define COMPONENT_SIGNAL(a) (char *)SIGNAL(a)
 #define COMPONENT_SLOT(a) (char *)SLOT(a)
 
-class Component: public NodeView
+class Component: public NodeView, public ComponentInterface
 {
     Q_OBJECT
+    Q_INTERFACES(ComponentInterface)
+
 public:
     Component(QGraphicsItem *parent = 0);
     virtual Component* clone(QGraphicsItem *parent = 0) const = 0;
     virtual ~Component();
+
+    Component *getComponent() {return this;}
 
     int registerOutput(char *signal, const QString &componentName);
     int registerInput(char *slot, const QString &componentName);

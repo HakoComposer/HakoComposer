@@ -4,30 +4,30 @@
 #  [root]/license.txt for more. This information must remain intact.
 #
 
-QT       += core gui
+TEMPLATE    = lib
+CONFIG      += plugin
+QT          += core gui
+DESTDIR     = $$PWD/../../bin/plugins
 
-TARGET = SampleComponent
-TEMPLATE = lib
-#CONFIG += staticlib
 
-DESTDIR = $$PWD/../../plugins/$$TARGET
+TARGET      = SampleComponent
 
 !include(../../HakoCore/HakoCore.pri) {
         error("Unable to include Hako Library.")
 }
 
-INCLUDEPATH += include
+INCLUDEPATH += $$PWD/include
 
 SOURCES += \
-    src/SampleComponent.cpp \
-    src/SampleSettingsDialog.cpp
+    $$PWD/src/SampleComponent.cpp \
+    $$PWD/src/SampleSettingsDialog.cpp
 
 HEADERS  += \
-    include/SampleComponent.hpp \
-    include/SampleSettingsDialog.h
+    $$PWD/include/SampleComponent.hpp \
+    $$PWD/include/SampleSettingsDialog.h
 
 FORMS += \
-    ui/SampleSettingsDialog.ui
+    $$PWD/ui/SampleSettingsDialog.ui
 
 RESOURCES += \
-    SampleComponent.qrc
+    $$PWD/SampleComponent.qrc
