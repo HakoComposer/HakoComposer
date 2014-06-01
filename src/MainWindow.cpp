@@ -14,7 +14,6 @@
 #include <QMessageBox>
 #include <QDirIterator>
 #include <QDebug>
-#include <iostream>
 
 #include "ComponentInterface.h"
 
@@ -110,34 +109,29 @@ void MainWindow::registerComponents(const QList<Component *> &components)
 QList<Component *> MainWindow::loadComponents()
 {
     QList<Component *> result;
-    //    result.push_back(new SampleComponent());
-    //    result.push_back(new SerialComponent());
-    //    result.push_back(new ImageLoaderComponent());
-    //    result.push_back(new ImageViewerComponent());
-    //    result.push_back(new ImageFilterComponent());
 
     QDir pluginsDir(qApp->applicationDirPath());
-#ifdef Q_OS_MAC
-    pluginsDir.cd("../../../plugins");
-#else
-    pluginsDir.cd("plugins");
+#if defined(Q_OS_WIN)
+    if (pluginsDir.dirName().toLower() == "debug" || pluginsDir.dirName().toLower() == "release")
+        pluginsDir.cdUp();
+#elif defined(Q_OS_MAC)
+    if (pluginsDir.dirName() == "MacOS") {
+        pluginsDir.cdUp();
+        pluginsDir.cdUp();
+        pluginsDir.cdUp();
+    }
 #endif
-
-    std::cout << "Try to load plugins in folder " << pluginsDir.path().toStdString() << endl;
+    pluginsDir.cd("plugins");
 
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-        std::cout << "Testing " << pluginsDir.absoluteFilePath(fileName).toStdString() << endl;
-        QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
+        QString absFileName = pluginsDir.absoluteFilePath(fileName);
+        QPluginLoader loader(absFileName);
         QObject *plugin = loader.instance();
         if (plugin) {
             ComponentInterface *interface =  qobject_cast<ComponentInterface *>(plugin);
             if(interface){
                 result.push_back(interface->getComponent());
             }
-        }
-        else {
-            std::cout << loader.errorString().toStdString() << endl;
-            std::cout << plugin << endl;
         }
     }
     return result;

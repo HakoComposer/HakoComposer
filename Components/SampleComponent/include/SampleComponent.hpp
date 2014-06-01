@@ -17,7 +17,7 @@ namespace Hako {
 class SampleComponent: public Component
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kristou.HakoComposer.SampleComponent" FILE "SampleComponent.json")
+    Q_PLUGIN_METADATA(IID "org.kristou.HakoComposer.SampleComponent")
 
 public:
     SampleComponent(QGraphicsItem *parent = 0);
@@ -27,6 +27,7 @@ public:
 
     void settingsActivated();
 
+    // This set of methods is needed to identify the coponent
     QString componentName() const;
     QIcon componentIcon() const;
     QString componentId() const;

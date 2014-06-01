@@ -16,7 +16,7 @@ namespace Hako {
 class ImageFilterComponent: public Component
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kristou.HakoComposer.ImageFilterComponent" FILE "ImageFilterComponent.json")
+    Q_PLUGIN_METADATA(IID "org.kristou.HakoComposer.ImageFilterComponent")
 
 public:
     ImageFilterComponent(QGraphicsItem *parent = 0);

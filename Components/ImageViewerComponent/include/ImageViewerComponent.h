@@ -15,7 +15,7 @@ namespace Hako {
 class ImageViewerComponent: public Component
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kristou.HakoComposer.ImageViewerComponent" FILE "ImageViewerComponent.json")
+    Q_PLUGIN_METADATA(IID "org.kristou.HakoComposer.ImageViewerComponent")
 
 public:
     ImageViewerComponent(QGraphicsItem *parent = 0);

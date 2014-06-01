@@ -97,7 +97,7 @@ QString SampleComponent::componentAuthor() const
 // The version of course
 QString SampleComponent::componentVersion() const
 {
-    return "1.0.0";
+    return "0.1.0";
 }
 
 // How to contact the auther
