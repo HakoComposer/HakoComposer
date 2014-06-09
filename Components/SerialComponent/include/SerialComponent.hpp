@@ -9,7 +9,7 @@
 
 #include "Component.hpp"
 #include <QByteArray>
-#include "qextserialport.h"
+#include <QSerialPort>
 #include "SerialSettingsDialog.h"
 #include <QMutex>
 
@@ -18,7 +18,7 @@ namespace Hako {
 class SerialComponent: public Component
 {
     Q_OBJECT
-
+    Q_PLUGIN_METADATA(IID "org.kristou.HakoComposer.SerialComponent")
 public:
     SerialComponent(QGraphicsItem *parent = 0);
     Component* clone(QGraphicsItem *parent = 0) const {return(new SerialComponent(parent));}
@@ -40,7 +40,7 @@ signals:
     void dataAvailable(const QByteArray &data);
 
 private:
-    QextSerialPort m_connection;
+    QSerialPort m_connection;
     long m_baudrate;
     SerialSettingsDialog *m_settingDialog;
 

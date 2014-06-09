@@ -6,8 +6,8 @@
 
 #include "SerialSettingsDialog.h"
 #include "ui_SerialSettingsDialog.h"
-#include "qextserialenumerator.h"
 #include <QDebug>
+#include <QSerialPortInfo>
 
 #define CONNECTED_STATE "connected"
 
@@ -88,12 +88,12 @@ void SerialSettingsDialog::connectButtonClicked()
 
 QStringList SerialSettingsDialog::getPortNames()
 {
-    QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
+    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 
     QStringList list;
-    foreach (QextPortInfo info, ports) {
-        if(info.portName.trimmed().size() > 0 && !list.contains(info.portName)){
-            list.push_back(info.portName);
+    foreach (QSerialPortInfo info, ports) {
+        if(info.portName().trimmed().size() > 0 && !list.contains(info.portName())){
+            list.push_back(info.portName());
         }
     }
 
@@ -102,23 +102,23 @@ QStringList SerialSettingsDialog::getPortNames()
 
 QStringList SerialSettingsDialog::getPortFrendlyNames()
 {
-    QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
+    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
     QStringList list;
-    foreach (QextPortInfo info, ports) {
-        if(info.portName.trimmed().size() > 0 && !list.contains(info.friendName)){
-            list.push_back(info.friendName);
+    foreach (QSerialPortInfo info, ports) {
+        if(info.portName().trimmed().size() > 0 && !list.contains(info.description())){
+            list.push_back(info.description());
         }
     }
 
     return list;
 }
 
-QextSerialPort *SerialSettingsDialog::connection() const
+QSerialPort *SerialSettingsDialog::connection() const
 {
     return m_connection;
 }
 
-void SerialSettingsDialog::setConnection(QextSerialPort *connection)
+void SerialSettingsDialog::setConnection(QSerialPort *connection)
 {
     m_connection = connection;
 }
@@ -136,13 +136,13 @@ bool SerialSettingsDialog::open(const QString &device, long baudrate)
     return false;
 }
 
-BaudRateType SerialSettingsDialog::decodeBaudrate(long baudrate){
+QSerialPort::BaudRate SerialSettingsDialog::decodeBaudrate(long baudrate){
     switch (baudrate) {
     case 115200:
-        return BAUD115200;
+        return QSerialPort::Baud115200;
         break;
     default:
-        return BAUD115200;
+        return QSerialPort::Baud115200;
         break;
     }
 }

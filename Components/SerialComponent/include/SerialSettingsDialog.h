@@ -9,7 +9,7 @@
 
 #include <QDialog>
 #include <QCloseEvent>
-#include "qextserialport.h"
+#include <QSerialPort>
 
 #define QT_NAMESPACE Hako
 
@@ -30,18 +30,18 @@ public:
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent *event);
     
-    QextSerialPort *connection() const;
-    void setConnection(QextSerialPort *connection);
+    QSerialPort *connection() const;
+    void setConnection(QSerialPort *connection);
 
 private:
     Ui::SerialSettingsDialog *ui;
-    QextSerialPort *m_connection;
+    QSerialPort *m_connection;
     long m_baudrate;
 
     QStringList getPortNames();
     QStringList getPortFrendlyNames();
     bool open(const QString &device, long baudrate);
-    BaudRateType decodeBaudrate(long baudrate);
+    QSerialPort::BaudRate decodeBaudrate(long baudrate);
     void close();
     bool setBaudrate(long baudrate);
     long baudrate() const;

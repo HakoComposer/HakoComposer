@@ -1,32 +1,27 @@
 
-QT       += core gui
+TEMPLATE    = lib
+CONFIG      += plugin
+QT          += core gui serialport
+DESTDIR     = $$PWD/../../bin/plugins
 
 TARGET = SerialComponent
-TEMPLATE = lib
-#CONFIG += staticlib
-
-DESTDIR = $$PWD/../../plugins/$$TARGET
 
 !include(../../HakoCore/HakoCore.pri) {
         error("Unable to include Hako Library.")
-}
-
-!include(qextserialport/src/qextserialport.pri) {
-        error("Unable to include qextserialport library.")
 }
 
 INCLUDEPATH += include
 
 SOURCES += \
     src/SerialComponent.cpp \
-    src/SettingsDialog.cpp
+    src/SerialSettingsDialog.cpp
 
 HEADERS  += \
     include/SerialComponent.hpp \
-    include/SettingsDialog.h
+    include/SerialSettingsDialog.h
 
 FORMS += \
-    ui/SettingsDialog.ui
+    ui/SerialSettingsDialog.ui
 
 RESOURCES += \
     SerialComponent.qrc

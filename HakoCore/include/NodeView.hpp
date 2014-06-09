@@ -38,7 +38,7 @@ class NodeView : public QGraphicsObject
 public:
 
     explicit NodeView(QGraphicsItem *parent = 0);
-    explicit NodeView( const QPointF& position = QPointF(0, 0)
+    explicit NodeView( const QPointF& position
             , unsigned int nbReaderInputs = 0
             , unsigned int nbReaderOutputs = 0
             , unsigned int nbWriterInputs = 0
