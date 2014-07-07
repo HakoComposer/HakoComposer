@@ -11,6 +11,7 @@
 #include <QGraphicsObject>
 #include <QSignalMapper>
 #include "NodePortView.hpp"
+#include "LinkConnectorView.h"
 
 namespace Hako {
 
@@ -40,6 +41,7 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     PortTypeEnum m_type;
@@ -47,12 +49,15 @@ private:
     NodePortView* m_inPort;
     QColor m_color;
     QSignalMapper *m_signalMapper;
+    QVector<LinkConnectorView *> m_connectors;
 
     void connectSignals();
     void disconnectSignals();
 
+    void connectFromTo(const QPointF &p1, const QPointF &p2, QPainterPath &path) const;
 private slots:
     void signalActivated(int index);
+    void connectorsPositionChanged();
 };
 
 }

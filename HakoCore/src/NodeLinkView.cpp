@@ -24,7 +24,7 @@ NodeLinkView::NodeLinkView(PortTypeEnum type, NodePortView* p1, NodePortView* p2
     setAcceptHoverEvents(true);
 
     QObject::connect(m_signalMapper, SIGNAL(mapped(int)),
-                 this, SLOT(signalActivated(int)));
+                     this, SLOT(signalActivated(int)));
 
     if(!p1){qWarning() << "NodeLinkView::constructor warning p1 = nil ptr";}
     if(!p2){qWarning() << "NodeLinkView::constructor warning p2 = nil ptr";}
@@ -81,10 +81,10 @@ void NodeLinkView::disconnectSignals()
     if(inPort()->object() && outPort()->object()){
         if(inPort()->signal() && outPort()->signal()){
             if(!outPort()->isTemporary && !inPort()->isTemporary){
+                m_signalMapper->removeMappings(outPort()->object());
                 QObject::disconnect(outPort()->object(), outPort()->signal(),
                                     inPort()->object(), inPort()->signal());
                 QObject::disconnect(outPort()->object(), outPort()->signal(), m_signalMapper, SLOT(map()));
-                m_signalMapper->removeMappings(outPort()->object());
             }
         }
     }
@@ -100,6 +100,11 @@ void NodeLinkView::signalActivated(int index)
     animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
+void NodeLinkView::connectorsPositionChanged()
+{
+    update();
+}
+
 void NodeLinkView::setPorts( NodePortView* in, NodePortView* out)
 {
     m_inPort = in;
@@ -109,24 +114,39 @@ void NodeLinkView::setPorts( NodePortView* in, NodePortView* out)
 
 QPainterPath NodeLinkView::shape() const
 {
-    QPointF p1, p2, c1, c2;
+    QPointF p1, p2;
+    QPainterPath path( m_outPort->pos() );
 
     p1 = m_outPort->pos();
-    p2 = m_inPort->pos();
-
-    if(((m_inPort->portType() & WRITER) == WRITER) &&
-            ((m_outPort->portType() & WRITER) == WRITER)){
-        c1 = QPointF(m_outPort->pos().x(), (m_inPort->pos().y()+m_outPort->pos().y() )/2.0);
-        c2 = QPointF(m_inPort->pos().x(), (m_inPort->pos().y()+m_outPort->pos().y() )/2.0);
-    }else if(((m_inPort->portType() & READER) == READER) &&
-             ((m_outPort->portType() & READER) == READER)){
-        c1 = QPointF((m_inPort->pos().x()+m_outPort->pos().x() )/2.0, m_outPort->pos().y());
-        c2 = QPointF((m_inPort->pos().x()+m_outPort->pos().x() )/2.0, m_inPort->pos().y());
+    foreach(LinkConnectorView *con, m_connectors){
+        p2 = con->scenePos();
+        connectFromTo(p1, p2, path);
+        p1 = con->scenePos();
     }
 
-    QPainterPath path( m_outPort->pos() );
-    path.cubicTo( c1, c2, p2 );
+    p2 = m_inPort->pos();
+    connectFromTo(p1, p2, path);
+
     return path;
+}
+
+void NodeLinkView::connectFromTo(const QPointF &p1, const QPointF &p2, QPainterPath &path) const
+{
+    QPointF c1, c2;
+    if(((m_inPort->portType() & WRITER) == WRITER) &&
+            ((m_outPort->portType() & WRITER) == WRITER)){
+        c1 = QPointF(p1.x(), (p2.y()+p1.y() )/2.0);
+        c2 = QPointF(p2.x(), (p2.y()+p1.y() )/2.0);
+    }else if(((m_inPort->portType() & READER) == READER) &&
+             ((m_outPort->portType() & READER) == READER)){
+        c1 = QPointF((p2.x()+p1.x() )/2.0, p1.y());
+        c2 = QPointF((p2.x()+p1.x() )/2.0, p2.y());
+    }
+
+    //    path.cubicTo( c1, c2, p2 );
+    path.lineTo(c1);
+    path.lineTo(c2);
+    path.lineTo(p2);
 }
 
 void NodeLinkView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -160,11 +180,20 @@ void NodeLinkView::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     setColor(QColor(Qt::blue));
 }
 
+void NodeLinkView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    LinkConnectorView *con = new LinkConnectorView(this);
+    con->setPos(event->scenePos());
+    connect(con, SIGNAL(positionChanged()),
+            this, SLOT(connectorsPositionChanged()));
+    m_connectors.push_back(con);
+}
+
 NodeLinkView::~NodeLinkView()
 {
+    disconnectSignals();
     m_inPort->disconnectLink(this);
     m_outPort->disconnectLink(this);
-    disconnectSignals();
 }
 
 QColor NodeLinkView::color() const
