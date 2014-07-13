@@ -173,7 +173,10 @@ void NodeLinkView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseReleaseEvent(event);
     if(event->button() == Qt::RightButton){
-        delete this;
+        disconnectSignals();
+        m_inPort->disconnectLink(this);
+        m_outPort->disconnectLink(this);
+        deleteLater();
     }
 }
 
@@ -200,7 +203,7 @@ void NodeLinkView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 NodeLinkView::~NodeLinkView()
 {
-    disconnectSignals();
+    //    disconnectSignals();
     m_inPort->disconnectLink(this);
     m_outPort->disconnectLink(this);
 }

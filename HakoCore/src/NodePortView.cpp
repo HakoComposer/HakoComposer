@@ -80,7 +80,10 @@ void NodePortView::deleteLink( NodeLinkView* link )
         m_links.clear();
     }else{
         foreach(NodeLinkView* it, m_links){
-            if( it == link ) delete link;
+            if( it == link ){
+                m_links.removeAll(it);
+                delete link;
+            }
         }
     }
 }
