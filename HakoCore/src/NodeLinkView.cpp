@@ -118,10 +118,19 @@ QPainterPath NodeLinkView::shape() const
     QPainterPath path( m_outPort->pos() );
 
     p1 = m_outPort->pos();
-    foreach(LinkConnectorView *con, m_connectors){
-        p2 = con->scenePos();
+    QVector<int> indexes;
+    for(int i= 0; i< m_connectors.size(); i++) indexes.push_back(i);
+    qSort(indexes.begin(), indexes.end(), [=](int a, int b) -> bool{
+        if(m_connectors[a]->pos().x() == m_connectors[b]->pos().x()){
+            return m_connectors[a]->pos().y() < m_connectors[b]->pos().y();
+        }else{
+            return m_connectors[a]->pos().x() < m_connectors[b]->pos().x();
+        }
+    });
+    foreach(int index, indexes){
+        p2 = m_connectors[index]->scenePos();
         connectFromTo(p1, p2, path);
-        p1 = con->scenePos();
+        p1 = m_connectors[index]->scenePos();
     }
 
     p2 = m_inPort->pos();
