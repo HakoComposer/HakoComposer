@@ -25,7 +25,11 @@ QColor LinkConnectorView::color() const
 
 void LinkConnectorView::setColor(const QColor &color)
 {
-    m_color = color;
+    if(m_color != color){
+        m_color = color;
+        update();
+        emit colorChanged(color);
+    }
 }
 
 
@@ -36,7 +40,11 @@ QRectF LinkConnectorView::rect() const
 
 void LinkConnectorView::setRect(const QRectF &rect)
 {
-    m_rect = rect;
+    if(m_rect != rect){
+        m_rect = rect;
+        update();
+        emit rectChanged(rect);
+    }
 }
 
 void LinkConnectorView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

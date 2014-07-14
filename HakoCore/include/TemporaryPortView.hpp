@@ -14,6 +14,7 @@ namespace Hako {
 
 class TemporaryPortView : public NodePortView
 {
+    Q_OBJECT
 public:
     TemporaryPortView( PortTypeEnum type, const QPointF& position, QGraphicsItem *parent = 0 );
     void updatePosition();

@@ -18,7 +18,7 @@ namespace Hako {
 class NodeLinkView : public QGraphicsObject
 {
     Q_OBJECT
-    Q_PROPERTY(QColor color READ color WRITE setColor)
+    Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
 public:
     NodeLinkView( PortTypeEnum type, NodePortView* out, NodePortView* in, QGraphicsItem *parent = 0 );
     virtual ~NodeLinkView();
@@ -33,6 +33,9 @@ public:
 
     QColor color() const;
     void setColor(const QColor &color);
+
+signals:
+    void colorChanged(QColor arg);
 
 protected:
     QPainterPath shape() const;

@@ -11,8 +11,8 @@
 class LinkConnectorView : public QGraphicsObject
 {
     Q_OBJECT
-    Q_PROPERTY(QColor color READ color WRITE setColor)
-    Q_PROPERTY(QRectF rect READ rect WRITE setRect)
+    Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
+    Q_PROPERTY(QRectF rect READ rect WRITE setRect NOTIFY rectChanged)
 public:
     LinkConnectorView(QGraphicsItem * parent = 0);
     virtual ~LinkConnectorView();
@@ -25,12 +25,14 @@ public:
 
 signals:
     void positionChanged();
+    void colorChanged(QColor arg);
+
+    void rectChanged(QRectF arg);
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
 
 private:
     QRectF m_rect;

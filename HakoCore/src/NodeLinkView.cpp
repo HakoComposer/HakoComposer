@@ -215,8 +215,11 @@ QColor NodeLinkView::color() const
 
 void NodeLinkView::setColor(const QColor &color)
 {
-    m_color = color;
-    update();
+    if(m_color != color){
+        m_color = color;
+        update();
+        emit colorChanged(color);
+    }
 }
 
 }
