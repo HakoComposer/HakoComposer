@@ -35,6 +35,7 @@ signals:
 class NodeView : public QGraphicsObject
 {
     Q_OBJECT
+    Q_PROPERTY(QColor baseColor READ baseColor WRITE setBaseColor NOTIFY baseColorChanged)
 public:
 
     explicit NodeView(QGraphicsItem *parent = 0);
@@ -82,10 +83,17 @@ public:
 
     QList<NodeLinkView *> getLinks();
 
+    QColor baseColor() const;
+
+public slots:
+    void setBaseColor(QColor arg);
+    void flash(QColor color, int duration);
+
 signals:
     void closeClicked(const QPoint &pos);
     void settingsClicked(const QPoint &pos);
     void menuClicked(const QPoint &pos);
+    void baseColorChanged(QColor arg);
 
 protected:
     void mouseMoveEvent( QGraphicsSceneMouseEvent * event );
@@ -115,6 +123,7 @@ private:
     NodeButton *m_settingsButton;
     NodeButton *m_menuButton;
     unsigned int m_index;
+    QColor m_baseColor;
 
     void updateGeometry();
     void updatePortsPosition();

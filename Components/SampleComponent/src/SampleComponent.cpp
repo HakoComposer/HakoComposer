@@ -18,7 +18,7 @@ SampleComponent::SampleComponent(QGraphicsItem *parent):
     m_settingDialog = new SampleSettingsDialog();
 
     // this is a sample behavior of this component, it will send a beat avery second
-    connect(&m_timer, SIGNAL(timeout()), this, SIGNAL(sendBeat()));
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(treatBeat()));
     m_timer.start(1000);
 
     // An example of a component menu with some actions
@@ -47,6 +47,12 @@ void SampleComponent::recieveBeat()
     qDebug() << "Beat";
 }
 
+void SampleComponent::treatBeat()
+{
+    flash(QColor(Qt::red), 500);
+    emit sendBeat();
+}
+
 // This member function get invoked every time a user
 // click on the settings button.
 void SampleComponent::settingsActivated()
@@ -55,7 +61,6 @@ void SampleComponent::settingsActivated()
     m_settingDialog->show();
     m_settingDialog->raise();
 }
-
 
 // Next are nessesary information needed by
 // the component to be represented correctly

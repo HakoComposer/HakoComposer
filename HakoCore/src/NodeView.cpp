@@ -51,7 +51,8 @@ NodeView::NodeView(QGraphicsItem *parent):
     m_closeButton(NULL),
     m_settingsButton(NULL),
     m_menuButton(NULL),
-    m_index(0)
+    m_index(0),
+    m_baseColor(Qt::white)
 {
     initNode(QPointF(0, 0), 0, 0, 0, 0);
 }
@@ -66,7 +67,8 @@ NodeView::NodeView(const QPointF& position
     m_closeButton(NULL),
     m_settingsButton(NULL),
     m_menuButton(NULL),
-    m_index(0)
+    m_index(0),
+    m_baseColor(Qt::white)
 {
     initNode(position, nbReaderInputs, nbReaderOutputs, nbWriterInputs, nbWriterOutputs);
 }
@@ -195,12 +197,12 @@ void NodeView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     Q_UNUSED(widget);
 
     QLinearGradient gradient( 0.0, 0.0, 0.0, m_rect.bottom() );
+    gradient.setColorAt( 0, baseColor() );
     gradient.setColorAt( 1, componentColor() );
-    gradient.setColorAt( 0, Qt::white );
     painter->setBrush( gradient );
 //    painter->setPen( QPen( Qt::transparent ) );
     painter->setPen( QPen( componentColor() ) );
-    painter->drawRoundedRect( m_rect, 10, 10 );
+    painter->drawRoundedRect( m_rect, 5, 5 );
     painter->setPen( QPen( QColor(Qt::black) ) );
     painter->drawText( QPointF(m_nameMargin, 20), componentName()
                    #ifdef SHOW_NODE_INDEX
@@ -491,6 +493,29 @@ QList<NodeLinkView *> NodeView::getLinks()
     }
 
     return links;
+}
+
+QColor NodeView::baseColor() const
+{
+    return m_baseColor;
+}
+
+void NodeView::setBaseColor(QColor arg)
+{
+    if (m_baseColor != arg) {
+        m_baseColor = arg;
+        update();
+        emit baseColorChanged(arg);
+    }
+}
+
+void NodeView::flash(QColor color, int duration)
+{
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "baseColor");
+    animation->setDuration(duration);
+    animation->setStartValue(color);
+    animation->setEndValue(m_baseColor);
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 }

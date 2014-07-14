@@ -49,6 +49,7 @@ private:
 
 private slots:
     void recieveBeat();
+    void treatBeat();
 };
 
 }
