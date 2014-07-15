@@ -198,10 +198,11 @@ QList<Component *> Workspace::getRegisteredComponents()
 QMap<QString, QString> Workspace::getLinksRecords()
 {
     QMap<QString, QString> result;
+    int index = 0;
     foreach (QGraphicsItem *item, items()) {
         NodeLinkView* link = dynamic_cast<NodeLinkView *>(item);
         if(link){
-            result.insertMulti(
+            result.insertMulti(QString::number(index) + ":" +
                         link->outPort()->componentId() +
                         "#" + QString::number(link->outPort()->getNodeIndex()) +
                         "$" + QString::number((int)link->outPort()->portType()) +
@@ -211,6 +212,7 @@ QMap<QString, QString> Workspace::getLinksRecords()
                         "$" + QString::number((int)link->inPort()->portType()) +
                         "-" + QString::number(link->inPort()->index())
                         );
+            index++;
         }
     }
     return result;
@@ -281,7 +283,12 @@ void Workspace::loadLinks(QTextStream *ts, const QMap<QString, Component *> &com
             break;
         }
         if(linksRecordsFound){
-            QStringList parts = line.split(" => ", QString::SkipEmptyParts);
+            QStringList sections = line.split(":", QString::SkipEmptyParts);
+            if(sections.size() != 2){
+                continue;
+            }
+
+            QStringList parts = sections[1].split(" => ", QString::SkipEmptyParts);
             if(parts.size() != 2){
                 continue;
             }

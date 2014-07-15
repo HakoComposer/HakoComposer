@@ -47,12 +47,13 @@ void NodeLinkView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     Q_UNUSED(widget);
 
     painter->setPen( QPen(m_color, 3) );
+    painter->setBrush( QBrush(m_color) );
     painter->drawPath( shape() );
 }
 
 QRectF NodeLinkView::boundingRect() const
 {
-    return QRectF( m_outPort->pos(), m_inPort->pos());
+    return QRectF( shape().controlPointRect() );
 }
 
 void NodeLinkView::updatePosition( PortTypeEnum type, const QPointF& position )
@@ -118,36 +119,91 @@ QPainterPath NodeLinkView::shape() const
     QPainterPath path( m_outPort->pos() );
 
     p1 = m_outPort->pos();
-    QVector<int> indexes;
-    for(int i= 0; i< m_connectors.size(); i++) indexes.push_back(i);
-    qSort(indexes.begin(), indexes.end(), [=](int a, int b) -> bool{
-        if(m_connectors[a]->pos().x() == m_connectors[b]->pos().x()){
-            return m_connectors[a]->pos().y() < m_connectors[b]->pos().y();
-        }else{
-            return m_connectors[a]->pos().x() < m_connectors[b]->pos().x();
+    if(m_connectors.size() > 0){
+        QVector<int> indexes;
+        for(int i= 0; i< m_connectors.size(); i++) indexes.push_back(i);
+        qSort(indexes.begin(), indexes.end(), [=](int a, int b) -> bool{
+            if(m_outPort->pos().x() < m_inPort->pos().x()){
+                if(m_connectors[a]->pos().x() == m_connectors[b]->pos().x()){
+                    return m_connectors[a]->pos().y() < m_connectors[b]->pos().y();
+                }else{
+                    return m_connectors[a]->pos().x() < m_connectors[b]->pos().x();
+                }
+            }else{
+                if(m_connectors[a]->pos().x() == m_connectors[b]->pos().x()){
+                    return m_connectors[a]->pos().y() > m_connectors[b]->pos().y();
+                }else{
+                    return m_connectors[a]->pos().x() > m_connectors[b]->pos().x();
+                }
+            }
+        });
+
+        if(isWriterLink()){
+            if(m_connectors[indexes[0]]->y() < m_outPort->pos().y()){
+                p2 = QPointF(m_outPort->x(), m_connectors[indexes[0]]->pos().y());
+                connectFromTo(p1, p2, path);
+                p1 = p2;
+            }
+        }else if(isReaderLink()){
+            if(m_connectors[indexes[0]]->x() < m_outPort->pos().x()){
+                p2 = QPointF(m_connectors[indexes[0]]->x(), m_outPort->pos().y());
+                connectFromTo(p1, p2, path);
+                p1 = p2;
+            }
         }
-    });
-    foreach(int index, indexes){
-        p2 = m_connectors[index]->scenePos();
-        connectFromTo(p1, p2, path);
-        p1 = m_connectors[index]->scenePos();
+
+
+        foreach(int index, indexes){
+            p2 = m_connectors[index]->scenePos();
+            connectFromTo(p1, p2, path);
+            p1 = p2;
+        }
+    }
+
+    if(isWriterLink()){
+        if(p1.y() > m_inPort->pos().y()){
+            p2 = QPointF(m_inPort->x(), p1.y());
+            connectFromTo(p1, p2, path);
+            p1 = p2;
+        }
+    }else if(isReaderLink()){
+        if(p1.x() > m_inPort->pos().x()){
+            p2 = QPointF(p1.x(), m_inPort->pos().y());
+            connectFromTo(p1, p2, path);
+            p1 = p2;
+        }
     }
 
     p2 = m_inPort->pos();
     connectFromTo(p1, p2, path);
 
+    QPolygonF poly = path.toFillPolygon();
+    for(int i = poly.size() -1; i >= 0; i--){
+        if(poly[i] == m_outPort->pos() || poly[i] == m_inPort->pos()) continue;
+        path.lineTo(poly[i]);
+    }
+    path.closeSubpath();
     return path;
+}
+bool NodeLinkView::isWriterLink() const
+{
+    return ((m_inPort->portType() & WRITER) == WRITER) &&
+            ((m_outPort->portType() & WRITER) == WRITER);
+}
+
+bool NodeLinkView::isReaderLink() const
+{
+    return ((m_inPort->portType() & READER) == READER) &&
+            ((m_outPort->portType() & READER) == READER);
 }
 
 void NodeLinkView::connectFromTo(const QPointF &p1, const QPointF &p2, QPainterPath &path) const
 {
     QPointF c1, c2;
-    if(((m_inPort->portType() & WRITER) == WRITER) &&
-            ((m_outPort->portType() & WRITER) == WRITER)){
+    if(isWriterLink()){
         c1 = QPointF(p1.x(), (p2.y()+p1.y() )/2.0);
         c2 = QPointF(p2.x(), (p2.y()+p1.y() )/2.0);
-    }else if(((m_inPort->portType() & READER) == READER) &&
-             ((m_outPort->portType() & READER) == READER)){
+    }else if(isReaderLink()){
         c1 = QPointF((p2.x()+p1.x() )/2.0, p1.y());
         c2 = QPointF((p2.x()+p1.x() )/2.0, p2.y());
     }
@@ -199,6 +255,16 @@ void NodeLinkView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     connect(con, SIGNAL(positionChanged()),
             this, SLOT(connectorsPositionChanged()));
     m_connectors.push_back(con);
+}
+
+bool NodeLinkView::contains(const QPointF &point) const
+{
+    QPainterPath oldpath = shape();
+    QPainterPathStroker stroker;
+    stroker.setWidth(20);
+    stroker.setJoinStyle(Qt::MiterJoin); // and other adjustments you need
+    QPainterPath newpath = (stroker.createStroke(oldpath) + oldpath).simplified();
+    return newpath.contains(point);
 }
 
 NodeLinkView::~NodeLinkView()

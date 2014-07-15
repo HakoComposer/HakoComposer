@@ -45,6 +45,7 @@ protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    bool contains(const QPointF &point) const;
 
 private:
     PortTypeEnum m_type;
@@ -58,6 +59,8 @@ private:
     void disconnectSignals();
 
     void connectFromTo(const QPointF &p1, const QPointF &p2, QPainterPath &path) const;
+    bool isReaderLink() const;
+    bool isWriterLink() const;
 private slots:
     void signalActivated(int index);
     void connectorsPositionChanged();
